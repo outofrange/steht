@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Configuration class for creating enum based StateMachines.
  * <p>
- * To create a builder, call the static factory method {@link StateMachineBuilder#createWithEnum(Class)}
+ * To create a builder, call the static factory method {@link StateMachineBuilder#create(Class)}
  * <p>
  * Configuration is fluently done using {@link StateMachineBuilder#from(Object)} and
  * {@link StateMachineBuilder.TransitionAdder#to(Object, Runnable)}.
@@ -37,8 +37,24 @@ public class StateMachineBuilder<S> {
         transitions = ArrayTable.create(valueList, valueList);
     }
 
-    public static <T extends Enum<T>> StateMachineBuilder<T> createWithEnum(Class<T> e) {
-        return new StateMachineBuilder<>(e.getEnumConstants());
+    /**
+     * Creates a new builder using an enum class and all their declared constants
+     *
+     * @param enumClass an enum class
+     * @return a new builder to configure possible transitions
+     */
+    public static <T extends Enum<T>> StateMachineBuilder<T> create(Class<T> enumClass) {
+        return new StateMachineBuilder<>(enumClass.getEnumConstants());
+    }
+
+    /**
+     * Creates a new builder using the given states
+     *
+     * @param states possible states for this state machine builder
+     * @return a new builder to configure possible transitions
+     */
+    public static <T> StateMachineBuilder<T> create(T[] states) {
+        return new StateMachineBuilder<>(states);
     }
 
     public TransitionAdder from(S state) {
@@ -66,7 +82,7 @@ public class StateMachineBuilder<S> {
          * Creates a new transition to {@code state}, executing the transition {@code transition} when
          * switching the state to it
          *
-         * @param state the state to create the transition to
+         * @param state      the state to create the transition to
          * @param transition a functional interface which should be executed when transitioning to {@code state}
          */
         public TransitionAdder to(S state, Runnable transition) {
