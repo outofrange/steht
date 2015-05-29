@@ -8,6 +8,23 @@
     <artifactId>steht</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <description>A simple finite state machine implementation, supporting shortest path transitions</description>
+    <url>https://github.com/outofrange/steht</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/outofrange/steht</url>
+    </scm>
+
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -20,5 +37,4 @@
             <version>1.7.12</version>
         </dependency>
     </dependencies>
-
 </project>
