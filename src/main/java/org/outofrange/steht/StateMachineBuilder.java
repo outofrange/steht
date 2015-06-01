@@ -1,10 +1,5 @@
 package org.outofrange.steht;
 
-import com.google.common.collect.ArrayTable;
-import com.google.common.collect.Table;
-
-import java.util.*;
-
 /**
  * Configuration class for creating enum based StateMachines.
  * <p>
@@ -27,11 +22,10 @@ import java.util.*;
  * @param <S> the type of the used states
  */
 public class StateMachineBuilder<S> {
-	private final Table<S, S, List<Runnable>> transitions;
+	private final TransitionTable<S> transitions;
 
 	private StateMachineBuilder(S[] validStates) {
-		final List<S> valueList = Arrays.asList(Objects.requireNonNull(validStates));
-		transitions = ArrayTable.create(valueList, valueList);
+		transitions = TransitionTable.create(validStates);
 	}
 
 	/**
@@ -61,7 +55,7 @@ public class StateMachineBuilder<S> {
 	 * @return a configuration class to configure where transitions are possible to
 	 */
 	public TransitionFrom from(S state) {
-		return new TransitionFrom(transitions.row(state));
+		return new TransitionFrom(state);
 	}
 
 	/**
@@ -81,10 +75,10 @@ public class StateMachineBuilder<S> {
 	 * least once
 	 */
 	public class TransitionFrom {
-		private final Map<S, List<Runnable>> transitionsTo;
+		private final S from;
 
-		private TransitionFrom(Map<S, List<Runnable>> transitionsTo) {
-			this.transitionsTo = transitionsTo;
+		private TransitionFrom(S from) {
+			this.from = from;
 		}
 
 		/**
@@ -95,16 +89,9 @@ public class StateMachineBuilder<S> {
 		 * @param transition a functional interface which should be executed when transitioning to {@code state}
 		 */
 		public TransitionTo to(S state, Runnable transition) {
-			List<Runnable> runnables = transitionsTo.get(state);
+			transitions.addTransition(from, state, transition);
 
-			if (runnables == null) {
-				runnables = new ArrayList<>();
-				transitionsTo.put(state, runnables);
-			}
-
-			runnables.add(transition);
-
-			return new TransitionTo(transitionsTo);
+			return new TransitionTo(from);
 		}
 
 		/**
@@ -113,19 +100,12 @@ public class StateMachineBuilder<S> {
 		 * @param state the state to create the transition to
 		 */
 		public TransitionTo to(S state) {
-			List<Runnable> runnables = transitionsTo.get(state);
-
-			if (runnables == null) {
-				runnables = new ArrayList<>();
-				transitionsTo.put(state, runnables);
-			}
-
-			return new TransitionTo(transitionsTo);
+			return to(state, null);
 		}
 
 		public class TransitionTo extends TransitionFrom {
-			private TransitionTo(Map<S, List<Runnable>> transitionsTo) {
-				super(transitionsTo);
+			private TransitionTo(S from) {
+				super(from);
 			}
 
 			/**

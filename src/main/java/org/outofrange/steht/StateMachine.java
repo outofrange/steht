@@ -1,11 +1,12 @@
 package org.outofrange.steht;
 
-import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * An implementation of a state machine able to choose the shortest path between two states.
@@ -15,13 +16,13 @@ import java.util.stream.Collectors;
 public class StateMachine<S> {
 	private static final Logger log = LoggerFactory.getLogger(StateMachine.class);
 
-	private final Table<S, S, List<Runnable>> transitions;
+	private final TransitionTable<S> transitions;
 
 	private final S initialState;
 	private S currentState;
 	private int transitionsDone = 0;
 
-	StateMachine(Table<S, S, List<Runnable>> transitions, S initialState) {
+	StateMachine(TransitionTable<S> transitions, S initialState) {
 		this.transitions = Objects.requireNonNull(transitions);
 		this.initialState = currentState = Objects.requireNonNull(initialState);
 	}
@@ -116,7 +117,7 @@ public class StateMachine<S> {
 	private List<S> getShortestStatePathBetween(S from, S to) {
 		// in the transition table, on state is reachable from another state, if there the intersection in the table
 		// is != null
-		final Set<S> reachableStates = getKeysWithoutValue(transitions.row(from));
+		final Set<S> reachableStates = transitions.getReachableStates(from);
 
 		// is the target state B directly reachable from this state, A?
 		// then it's A -> B
@@ -143,10 +144,5 @@ public class StateMachine<S> {
 		} else {
 			return null;
 		}
-	}
-
-	private static <T> Set<T> getKeysWithoutValue(Map<T, ?> map) {
-		return map.entrySet().stream().filter(e -> e.getValue() != null).map(Map.Entry::getKey).collect(Collectors
-				.toSet());
 	}
 }
