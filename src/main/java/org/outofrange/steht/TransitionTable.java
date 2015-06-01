@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  *
  * @param <S> the type of the states
  */
-public class TransitionTable<S> {
+class TransitionTable<S> {
 	private final Table<S, S, List<Runnable>> table;
 
 	private TransitionTable(S[] validStates) {
