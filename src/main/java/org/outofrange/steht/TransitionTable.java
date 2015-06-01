@@ -84,4 +84,23 @@ class TransitionTable<S> implements Cloneable {
 		return table.row(from).entrySet().stream().filter(e -> e.getValue() != null).map(Map.Entry::getKey).collect
 				(Collectors.toSet());
 	}
+
+	@Override
+	public String toString() {
+		final StringJoiner joinNewline = new StringJoiner("\n");
+
+		for (Map.Entry<S, Map<S, List<Runnable>>> rowEntry : table.rowMap().entrySet()) {
+			final StringBuilder sb = new StringBuilder();
+			sb.append(rowEntry.getKey()).append(": ");
+
+			final StringJoiner joinBlank = new StringJoiner(" ");
+			for (S column : getReachableStates(rowEntry.getKey())) {
+				joinBlank.add(column.toString());
+			}
+
+			joinNewline.add(sb.append(joinBlank));
+		}
+
+		return joinNewline.toString();
+	}
 }

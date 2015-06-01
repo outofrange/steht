@@ -1,5 +1,8 @@
 package org.outofrange.steht;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Configuration class for creating enum based StateMachines.
  * <p>
@@ -22,6 +25,8 @@ package org.outofrange.steht;
  * @param <S> the type of the used states
  */
 public class StateMachineBuilder<S> {
+	private static final Logger log = LoggerFactory.getLogger(StateMachineBuilder.class);
+
 	private final TransitionTable<S> transitions;
 
 	private StateMachineBuilder(S[] validStates) {
@@ -65,6 +70,7 @@ public class StateMachineBuilder<S> {
 	 * @return a new StateMachine
 	 */
 	public StateMachine<S> startAt(S initialState) {
+		log.trace("Creating state machine starting at {}, with following configuration:\n{}", initialState, transitions);
 		return new StateMachine<>(transitions, initialState);
 	}
 

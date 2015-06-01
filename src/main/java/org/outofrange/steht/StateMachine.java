@@ -47,7 +47,7 @@ public class StateMachine<S> {
 			if (runnables != null) {
 				// there's a direct path
 
-				log.trace("Going to state " + state);
+				log.trace("Going to state {}", state);
 				runnables.forEach(Runnable::run);
 
 				currentState = state;
@@ -95,6 +95,7 @@ public class StateMachine<S> {
 	 * Also, {@link StateMachine#getTransitionsDone()} will return 0 again after {@code reset}
 	 */
 	public void reset() {
+		log.trace("Resetting state machine");
 		setState(initialState);
 		transitionsDone = 0;
 	}
@@ -105,6 +106,7 @@ public class StateMachine<S> {
 	 * @param state the state to set
 	 */
 	public void setState(S state) {
+		log.trace("Setting state to {} without doing any transitions", state);
 		currentState = state;
 	}
 
