@@ -3,14 +3,14 @@ package org.outofrange.steht;
 /**
  * Configuration class for creating enum based StateMachines.
  * <p>
- * To create a builder, call the static factory method {@link StateMachineBuilder#create(Class)}
+ * To create a builder, call the static factory method {@link StateMachineBuilder#with(Class)}
  * <p>
  * Configuration is fluently done using {@link StateMachineBuilder#from(Object)} and
  * {@link TransitionFrom#to(Object, Runnable)}.
  * <p>
  * Example usage:
  * <pre>
- *     StateMachineBuilder&lt;SomeEnum&gt; builder = StateMachineBuilder.create(SomeEnum.class);
+ *     StateMachineBuilder&lt;SomeEnum&gt; builder = StateMachineBuilder.with(SomeEnum.class);
  *
  *     builder.from(SomeEnum.A).to(SomeEnum.B)
  *     .from(SomeEnum.B).to(SomeEnum.C).to(SomeEnum.D)
@@ -34,7 +34,7 @@ public class StateMachineBuilder<S> {
 	 * @param enumClass an enum class
 	 * @return a new builder to configure possible transitions
 	 */
-	public static <T extends Enum<T>> StateMachineBuilder<T> create(Class<T> enumClass) {
+	public static <T extends Enum<T>> StateMachineBuilder<T> with(Class<T> enumClass) {
 		return new StateMachineBuilder<>(enumClass.getEnumConstants());
 	}
 
@@ -44,7 +44,7 @@ public class StateMachineBuilder<S> {
 	 * @param states possible states for this state machine builder
 	 * @return a new builder to configure possible transitions
 	 */
-	public static <T> StateMachineBuilder<T> create(T[] states) {
+	public static <T> StateMachineBuilder<T> with(T[] states) {
 		return new StateMachineBuilder<>(states);
 	}
 

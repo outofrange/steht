@@ -11,7 +11,7 @@ public class StateMachineTest {
 
 	@Before
 	public void prepare() {
-		b = StateMachineBuilder.create(TestStates.class);
+		b = StateMachineBuilder.with(TestStates.class);
 	}
 
 	@Test
