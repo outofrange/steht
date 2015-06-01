@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  *
  * @param <S> the type of the states
  */
-class TransitionTable<S> {
+class TransitionTable<S> implements Cloneable {
 	private final Table<S, S, List<Runnable>> table;
 
 	private TransitionTable(S[] validStates) {
@@ -19,8 +19,18 @@ class TransitionTable<S> {
 		table = ArrayTable.create(states, states);
 	}
 
+	private TransitionTable(TransitionTable<S> transitionTable) {
+		this.table = ArrayTable.create(transitionTable.table);
+	}
+
 	static <T> TransitionTable<T> create(T[] states) {
 		return new TransitionTable<>(states);
+	}
+
+	@Override
+	public TransitionTable<S> clone() throws CloneNotSupportedException {
+		super.clone();
+		return new TransitionTable<>(this);
 	}
 
 	/**

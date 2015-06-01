@@ -23,7 +23,12 @@ public class StateMachine<S> {
 	private int transitionsDone = 0;
 
 	StateMachine(TransitionTable<S> transitions, S initialState) {
-		this.transitions = Objects.requireNonNull(transitions);
+		try {
+			this.transitions = Objects.requireNonNull(transitions).clone();
+		} catch (CloneNotSupportedException e) {
+			throw new UnsupportedOperationException("Can't clone transitions table", e);
+		}
+
 		this.initialState = currentState = Objects.requireNonNull(initialState);
 	}
 
@@ -114,7 +119,7 @@ public class StateMachine<S> {
 	 * @return either a list describing the shortest path from {@code from} to {@code to} (including themselves),
 	 * or null if no path could be found
 	 */
-	private List<S> getShortestStatePathBetween(S from, S to) {
+	List<S> getShortestStatePathBetween(S from, S to) {
 		// in the transition table, on state is reachable from another state, if there the intersection in the table
 		// is != null
 		final Set<S> reachableStates = transitions.getReachableStates(from);
