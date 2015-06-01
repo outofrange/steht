@@ -3,10 +3,7 @@ package org.outofrange.steht;
 import com.google.common.collect.ArrayTable;
 import com.google.common.collect.Table;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Configuration class for creating enum based StateMachines.
@@ -27,13 +24,13 @@ import java.util.Map;
  *     StateMachine&lt;SomeEnum<&gt; stateMachine = builder.startAt(SomeEnum.A);
  * </pre>
  *
- * @param <S> the used Enum
+ * @param <S> the type of the used states
  */
 public class StateMachineBuilder<S> {
     private final Table<S, S, List<Runnable>> transitions;
 
     private StateMachineBuilder(S[] validStates) {
-        final List<S> valueList = Arrays.asList(validStates);
+        final List<S> valueList = Arrays.asList(Objects.requireNonNull(validStates));
         transitions = ArrayTable.create(valueList, valueList);
     }
 

@@ -89,7 +89,7 @@ public class StateMachine<S> {
      * Also, {@link StateMachine#getTransitionsDone()} will return 0 again after {@code reset}
      */
     public void reset() {
-        currentState = initialState;
+        setState(initialState);
         transitionsDone = 0;
     }
 
@@ -113,8 +113,12 @@ public class StateMachine<S> {
      * or null if no path could be found
      */
     private List<S> getShortestStatePathBetween(S from, S to) {
+	    // in the transition table, on state is reachable from another state, if there the intersection in the table
+	    // is != null
         final Set<S> reachableStates = getKeysWithoutValue(transitions.row(from));
 
+	    // is the target state B directly reachable from this state, A?
+	    // then it's A -> B
         if (reachableStates.contains(to)) {
             final List<S> l = new ArrayList<>();
             l.add(from);
@@ -122,17 +126,19 @@ public class StateMachine<S> {
             return l;
         }
 
-        List<S> shortestRoute = null;
+	    // if it isn't, we have to look for the shortest path
+        List<S> shortestPath = null;
         for (S reachableState : reachableStates) {
             final List<S> statesBetween = getShortestStatePathBetween(reachableState, to);
-            if (statesBetween != null && (shortestRoute == null || statesBetween.size() < shortestRoute.size())) {
-                shortestRoute = statesBetween;
+            if (statesBetween != null && (shortestPath == null || statesBetween.size() < shortestPath.size())) {
+                shortestPath = statesBetween;
             }
         }
 
-        if (shortestRoute != null) {
-            shortestRoute.add(0, from);
-            return shortestRoute;
+        if (shortestPath != null) {
+	        // that's the shortest path from one of our directly reachable state, so we have to add ourself
+            shortestPath.add(0, from);
+            return shortestPath;
         } else {
             return null;
         }
