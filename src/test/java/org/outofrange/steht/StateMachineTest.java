@@ -48,22 +48,12 @@ public class StateMachineTest {
 
 	@Test
 	public void goingShortestPathWhenShortestPathWasConfiguredFirst() {
-		assertGoWorks(b.from(A).to(B)
-				.from(B).to(F)
-				.from(B).to(C)
-				.from(C).to(D)
-				.from(D).to(E)
-				.from(E).to(F), A, F, 2);
+		assertGoWorks(b.from(A).to(B).from(B).to(F).from(B).to(C).from(C).to(D).from(D).to(E).from(E).to(F), A, F, 2);
 	}
 
 	@Test
 	public void goingShortestPathWhenShortestPathWasConfiguredLast() {
-		assertGoWorks(b.from(A).to(B)
-				.from(B).to(C)
-				.from(C).to(D)
-				.from(D).to(E)
-				.from(E).to(F)
-				.from(B).to(F), A, F, 2);
+		assertGoWorks(b.from(A).to(B).from(B).to(C).from(C).to(D).from(D).to(E).from(E).to(F).from(B).to(F), A, F, 2);
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -71,8 +61,8 @@ public class StateMachineTest {
 		assertGoWorks(b.from(A).to(B).from(B).to(C).from(C).to(D), A, E, 0);
 	}
 
-	private static void assertGoWorks(StateMachineBuilder<TestStates>.TransitionFrom.TransitionTo builder,
-	                                  TestStates from, TestStates to, int expectedTransitions) {
+	private static void assertGoWorks(StateMachineBuilder<TestStates>.TransitionFrom.TransitionTo builder, TestStates
+			from, TestStates to, int expectedTransitions) {
 		StateMachine<TestStates> fsm = builder.startAt(from);
 
 		assertEquals(fsm.getCurrentState(), from);
