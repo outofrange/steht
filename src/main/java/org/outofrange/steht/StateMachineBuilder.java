@@ -71,7 +71,7 @@ public class StateMachineBuilder<S> {
 	/**
 	 * Configuration class for steht's little DSL.
 	 * This is the return value for {@link StateMachineBuilder#from(Object)} - another call to {@code from}
-	 * is only possible after calling {@link org.outofrange.steht.StateMachineBuilder.TransitionFrom#to(Object)} at
+	 * is only possible after calling {@link TransitionFrom#to(Object)} at
 	 * least once
 	 */
 	public class TransitionFrom {
