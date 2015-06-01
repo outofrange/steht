@@ -14,7 +14,7 @@ import java.util.Map;
  * To create a builder, call the static factory method {@link StateMachineBuilder#create(Class)}
  * <p>
  * Configuration is fluently done using {@link StateMachineBuilder#from(Object)} and
- * {@link StateMachineBuilder.TransitionAdder#to(Object, Runnable)}.
+ * {@link TransitionFrom#to(Object, Runnable)}.
  * <p>
  * Example usage:
  * <pre>
@@ -57,8 +57,8 @@ public class StateMachineBuilder<S> {
         return new StateMachineBuilder<>(states);
     }
 
-    public TransitionAdder from(S state) {
-        return new TransitionAdder(transitions.row(state));
+    public TransitionFrom from(S state) {
+        return new TransitionFrom(transitions.row(state));
     }
 
     /**
@@ -71,10 +71,10 @@ public class StateMachineBuilder<S> {
         return new StateMachine<>(transitions, initialState);
     }
 
-    public class TransitionAdder {
+    public class TransitionFrom {
         private final Map<S, List<Runnable>> transitionsTo;
 
-        private TransitionAdder(Map<S, List<Runnable>> transitionsTo) {
+        private TransitionFrom(Map<S, List<Runnable>> transitionsTo) {
             this.transitionsTo = transitionsTo;
         }
 
@@ -85,7 +85,7 @@ public class StateMachineBuilder<S> {
          * @param state      the state to create the transition to
          * @param transition a functional interface which should be executed when transitioning to {@code state}
          */
-        public TransitionAdder to(S state, Runnable transition) {
+        public TransitionTo to(S state, Runnable transition) {
             List<Runnable> runnables = transitionsTo.get(state);
 
             if (runnables == null) {
@@ -95,7 +95,7 @@ public class StateMachineBuilder<S> {
 
             runnables.add(transition);
 
-            return this;
+            return new TransitionTo(transitionsTo);
         }
 
         /**
@@ -103,7 +103,7 @@ public class StateMachineBuilder<S> {
          *
          * @param state the state to create the transition to
          */
-        public TransitionAdder to(S state) {
+        public TransitionTo to(S state) {
             List<Runnable> runnables = transitionsTo.get(state);
 
             if (runnables == null) {
@@ -111,21 +111,27 @@ public class StateMachineBuilder<S> {
                 transitionsTo.put(state, runnables);
             }
 
-            return this;
+            return new TransitionTo(transitionsTo);
         }
 
-        /**
-         * @see StateMachineBuilder#from(Object)
-         */
-        public TransitionAdder from(S state) {
-            return StateMachineBuilder.this.from(state);
-        }
+        public class TransitionTo extends TransitionFrom {
+            private TransitionTo(Map<S, List<Runnable>> transitionsTo) {
+                super(transitionsTo);
+            }
 
-        /**
-         * @see StateMachineBuilder#startAt(Object)
-         */
-        public StateMachine<S> startAt(S initialState) {
-            return StateMachineBuilder.this.startAt(initialState);
+            /**
+             * @see StateMachineBuilder#from(Object)
+             */
+            public TransitionFrom from(S state) {
+                return StateMachineBuilder.this.from(state);
+            }
+
+            /**
+             * @see StateMachineBuilder#startAt(Object)
+             */
+            public StateMachine<S> startAt(S initialState) {
+                return StateMachineBuilder.this.startAt(initialState);
+            }
         }
     }
 }

@@ -55,7 +55,7 @@ public class StateMachine<S> {
                     // we don't have to strip it
                     intermediaryStates.forEach(this::go);
                 } else {
-                    throw new IllegalArgumentException("There is no valid transition!");
+                    throw new IllegalStateException("There is no valid transition!");
                 }
             }
         }
