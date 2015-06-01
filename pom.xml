@@ -8,6 +8,16 @@
     <artifactId>steht</artifactId>
     <version>0.1.0</version>
 
+    <name>steht</name>
+
+    <developers>
+        <developer>
+            <id>outofrange</id>
+            <name>Markus Möslinger</name>
+            <email>markus.moeslinger@gmail.com</email>
+        </developer>
+    </developers>
+
     <description>A simple finite state machine implementation, supporting shortest path transitions</description>
     <url>https://github.com/outofrange/steht</url>
 
